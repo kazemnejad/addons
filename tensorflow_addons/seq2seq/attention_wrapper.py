@@ -296,8 +296,7 @@ class _BaseAttentionMechanism(AttentionMechanism, tf.keras.layers.Layer):
                 self.keys = self.memory_layer(self.values)
             else:
                 self.keys = self.values
-            self.batch_size = (tf.compat.dimension_value(self.keys.shape[0])
-                               or tf.shape(self.keys)[0])
+            self.batch_size = tf.shape(self.keys)[0]
             self._alignments_size = (tf.compat.dimension_value(
                 self.keys.shape[1]) or tf.shape(self.keys)[1])
             if memory_mask is not None or memory_sequence_length is not None:
