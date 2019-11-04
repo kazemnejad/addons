@@ -20,22 +20,24 @@ limitations under the License.
 namespace tensorflow {
 namespace addons {
 
-REGISTER_OP("Addons>Softshrink")
+REGISTER_OP("Addons>Rrelu")
     .Input("features: T")
     .Output("activations: T")
+    .Output("alpha: T")
     .Attr("T: {half, float, double}")
-    .Attr("lower: float = -0.5")
-    .Attr("upper: float = 0.5")
+    .Attr("lower: float")
+    .Attr("upper: float")
+    .Attr("training: bool")
+    .Attr("seed: int = 0")
+    .Attr("seed2: int = 0")
     .SetShapeFn(shape_inference::UnchangedShape);
 
-REGISTER_OP("Addons>SoftshrinkGrad")
+REGISTER_OP("Addons>RreluGrad")
     .Input("gradients: T")
     .Input("features: T")
+    .Input("alpha: T")
     .Output("backprops: T")
     .Attr("T: {half, float, double}")
-    .Attr("lower: float = -0.5")
-    .Attr("upper: float = 0.5")
     .SetShapeFn(shape_inference::MergeBothInputsShapeFn);
-
 }  // namespace addons
 }  // namespace tensorflow

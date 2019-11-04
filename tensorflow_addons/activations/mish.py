@@ -27,26 +27,23 @@ _activation_ops_so = tf.load_op_library(
 
 @keras_utils.register_keras_custom_object
 @tf.function
-def softshrink(x, lower=-0.5, upper=0.5):
-    """Soft shrink function.
+def mish(x):
+    """Mish: A Self Regularized Non-Monotonic Neural Activation Function.
 
-    Computes soft shrink function:
-    `x - lower if x < lower, x - upper if x > upper else 0`.
+    Computes mish activation: x * tanh(softplus(x))
+
+    See [Mish: A Self Regularized Non-Monotonic Neural Activation Function](https://arxiv.org/abs/1908.08681).
 
     Args:
         x: A `Tensor`. Must be one of the following types:
             `float16`, `float32`, `float64`.
-        lower: `float`, lower bound for setting values to zeros.
-        upper: `float`, upper bound for setting values to zeros.
     Returns:
         A `Tensor`. Has the same type as `x`.
     """
     x = tf.convert_to_tensor(x)
-    return _activation_ops_so.addons_softshrink(x, lower, upper)
+    return _activation_ops_so.addons_mish(x)
 
 
-@tf.RegisterGradient("Addons>Softshrink")
-def _softshrink_grad(op, grad):
-    return _activation_ops_so.addons_softshrink_grad(grad, op.inputs[0],
-                                                     op.get_attr("lower"),
-                                                     op.get_attr("upper"))
+@tf.RegisterGradient("Addons>Mish")
+def _mish_grad(op, grad):
+    return _activation_ops_so.addons_mish_grad(grad, op.inputs[0])
